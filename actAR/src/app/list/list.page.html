@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      List
+      My Stories
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -15,7 +15,7 @@
       <ion-icon [name]="item.icon" slot="start"></ion-icon>
       {{item.title}}
       <div class="item-note" slot="end">
-        {{item.note}}
+        <ion-button (click)="goToStory($event, item.id)">Start</ion-button>
       </div>
     </ion-item>
   </ion-list>
