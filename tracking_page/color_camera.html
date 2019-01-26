@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>tracking.js - color with camera</title>
+  <link rel="stylesheet" href="assets/demo.css">
+  <script src="../build/tracking-min.js"></script>
+  <script src="../build/data/face-min.js"></script>
+
+  <style>
+
+  video, canvas {
+    margin-left: 100px;
+    margin-top: 35px;
+    position: absolute;
+  }
+  </style>
+</head>
+<body>
+  <div class="demo-title">
+    <p><a href="http://trackingjs.com" target="_parent">tracking.js</a> － choose the colors you want to detect through the controls on the right</p>
+  </div>
+
+  <div class="demo-frame">
+    <div class="demo-container">
+      <video id="video" width="600" height="450" preload autoplay loop muted controls></video>
+      <canvas id="canvas" width="600" height="450"></canvas>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+
+      
+      var color_tracker = new tracking.ColorTracker(['magenta']);
+      var tracker = new tracking.ObjectTracker('face');
+
+      var img = document.createElement("img");
+      img.src = "assets/pirate-hat.jpg";
+      var sword = document.createElement("img");
+      sword.src = "assets/sword.png";
+      var currentSword = [];
+
+      tracking.track('#video', color_tracker, { camera: true });
+      tracking.track('#video', tracker, { camera: true });
+      tracker.on('track',function(event){
+        context.clearRect(0,0,canvas.width, canvas.height);
+
+        if(event.data.length==0){
+          //no objects in this frame
+        }
+        else{
+          event.data.forEach(function(rect){ 
+            context.drawImage(img, rect.x, rect.y-img.height/2, rect.width, rect.height);
+            if (currentSword.length != 0){
+              context.drawImage(sword, currentSword[0], currentSword[1], currentSword[2], currentSword[3]);
+            }
+        });
+        }
+      });
+      //whenever a sword is detected store it
+      color_tracker.on('track', function(event) {
+        //context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if(event.data.length==0){
+          //no objects in this frame
+        }
+        else{
+          console.log("found magenta");
+          event.data.forEach(function(rect) {
+          currentSword = [rect.x, rect.y, rect.width, rect.height]
+        });
+        }
+        
+      });
+
+    };
+  </script>
+
+</body>
+</html>
