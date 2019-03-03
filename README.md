@@ -1,5 +1,5 @@
 # actAR
-actAR Mobile Application
+actAR Mobile Application created during McMaster University's Delta Hacks V hackathon
 
 # To Run/Test the backend
 
